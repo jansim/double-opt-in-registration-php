@@ -31,34 +31,17 @@ try {
 
 switch($status) {
 	case STATUS_SUCCESS:
-?>
-	
-	<h1>Success</h1>
-	<p>Your email address, <?= $EmailRegistration->email; ?> has been confirmed.</p>
-	
-<?
-	
-	break;
+		Renderer::page('confirmation_success', array(
+			'email' => $EmailRegistration->email
+		));
+		break;
 	
 	case STATUS_ERROR:
-?>
-	
-	<h1>Error</h1>
-	<p>There was a problem confirming your registration.</p>
-	
-<?
-	
-	break;
+		Renderer::page('confirmation_error', array());
+		break;
 	
 	default:
-?>
-	
-	
-	<h1>Hello</h1>
-	<p>You have come to this page in error.</p>
-	
-	
-<?
+		Renderer::error();
 }
 
 ?>

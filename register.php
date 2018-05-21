@@ -22,24 +22,15 @@ if ($_POST) {
 	}
 }
 
-// if the user has registered, let them know it worked
-if ($registered) { 
-?>
-<h1>Thank You</h1>
-<p>Your registration has been processed.</p>
-<p>You will receive an email with instructions to confirm your registration.</p>
-<?
-} else { // otherwise display the form
-?>
-<form action="register.php" method="post">
-<?
-if ($email_error) {
-?>
-<div class="error">You entered an invalid email address.</div>
-<?
+$data = array(
+	'email_error' => $email_error,
+	'email' => $email,
+);
+
+if ($registered) {
+	// if the user has registered, let them know it worked
+	Renderer::page('registration_success', $data);
+} else {
+	// otherwise display the form
+	Renderer::page('registration_form', $data);
 }
-?>
-<input type="email" name="email" id="email" placeholder="email@example.com" value="<?= htmlentities($email); ?>" />
-<input type="submit" value="Subscribe" />
-</form>
-<? } // registered ?>
