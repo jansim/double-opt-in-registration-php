@@ -1,1 +1,4 @@
-Foot
+  </main> <!-- .container -->
+
+</body>
+</html>
