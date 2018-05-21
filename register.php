@@ -5,7 +5,10 @@ use Respect\Validation\Validator as v;
 
 // add new fields here to load them
 // (they still have to be added to the HTML form)
-const FIELDS = array('email');
+const FIELDS = array(
+	'email',
+	'name'
+);
 
 // Array to hold the values of the fields
 $fields = array();
@@ -24,7 +27,7 @@ if ($_POST) {
 	extract_fields($_POST);
 
 	// ==== Validate ====
-	// A list of errors during validation
+	// A list of errors during validation, the value should correspond to the fieldname
 	$validationErrors = array();
 	if (!v::email()->validate($fields['email'])) {
 		$validationErrors[] = 'email';
