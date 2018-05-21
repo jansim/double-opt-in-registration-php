@@ -38,7 +38,9 @@ if ($_POST) {
 			$Email->subject = "Confirm Registration";
 			$Email->recipient = $Registration->email;
 			$Email->sender = 'noreply@example.com';
-			$Email->message_html = file_get_contents('emails/register.htm');
+			$Email->message_html = Renderer::renderMail('mail_confirmed', array(
+				'link' => $settings['link_url_root'] . 'confirm.php?confirmationCode=' . urlencode($Registration->getConfirmationCode())
+			));
 			$Courier = new Courier();
 			$Courier->send($Email);
 			$registered = true;

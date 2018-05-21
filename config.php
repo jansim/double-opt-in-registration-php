@@ -10,6 +10,9 @@
 
   // Settings
   $settings = array();
+
+  $settings['link_url_root'] = 'http://localhost/';
+
   // database connection
   $settings['mysql'] = array();
   $settings['mysql']['host'] = 'localhost';

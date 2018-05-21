@@ -20,7 +20,9 @@ try {
 	$Email->subject = "Confirm Registration";
 	$Email->recipient = $Registration->email;
 	$Email->sender = 'noreply@example.com';
-	$Email->message_html = file_get_contents('emails/confirm.htm');
+	$Email->message_html = Renderer::renderMail('mail_confirmed', array(
+		'link' => $settings['link_url_root'] . 'unsubscribe.php?email=' . urlencode($Registration->email)
+	));
 	$Courier = new Courier();
 	$Courier->send($Email);
 	
