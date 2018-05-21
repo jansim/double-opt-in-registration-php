@@ -1,30 +1,68 @@
 <?
-// register.php
-
 require_once('vendor/autoload.php');
 
-if ($_POST) {
-	$email = $_POST['email'];
-	
-	$EmailRegistration = new EmailRegistration();
-	try {
-		$EmailRegistration->initialize($email);
-		$Email = new Email();
-		$Email->subject = "Confirm Registration";
-		$Email->recipient = $EmailRegistration->email;
-		$Email->sender = 'noreply@example.com';
-		$Email->message_html = file_get_contents('emails/register.htm');
-		$Courier = new Courier();
-		$Courier->send($Email);
-		$registered = true;
-	} catch (Exception $e) {
-		$email_error = true;
+use Respect\Validation\Validator as v;
+
+// add new fields here to load them
+// (they still have to be added to the HTML form)
+const FIELDS = array('email');
+
+// Array to hold the values of the fields
+$fields = array();
+
+// Extract fields from an array ($_POST or $_GET) if they are not found, they are set to null
+function extract_fields($target_array) {
+	global $fields;
+
+	foreach (FIELDS as $name) {
+		$fields[$name] = array_key_exists($name, $target_array) ? $target_array[$name] : null;
 	}
 }
 
+if ($_POST) {
+	// Extract fields from POST Array
+	extract_fields($_POST);
+
+	// ==== Validate ====
+	// A list of errors during validation
+	$validationErrors = array();
+	if (!v::email()->validate($fields['email'])) {
+		$validationErrors[] = 'email';
+	}
+
+	// Are all fields valid?
+	$valid = count($validationErrors) == 0;
+
+
+	// Register if all fields are valid
+	if ($valid) {
+		$email = $fields['email'];
+		$EmailRegistration = new EmailRegistration();
+		try {
+			$EmailRegistration->initialize($email);
+			$Email = new Email();
+			$Email->subject = "Confirm Registration";
+			$Email->recipient = $EmailRegistration->email;
+			$Email->sender = 'noreply@example.com';
+			$Email->message_html = file_get_contents('emails/register.htm');
+			$Courier = new Courier();
+			$Courier->send($Email);
+			$registered = true;
+		} catch (Exception $e) {
+			$email_error = true;
+		}
+	}
+} else if ($_GET) {
+	// Get placeholder values from GET if they are set (default to null)
+	extract_fields($_GET);
+}
+
+// Data to be passed to the the partials for rendering
 $data = array(
+	'fields' => $fields,
+
 	'email_error' => $email_error,
-	'email' => $email,
+	'validation_errors' => $validationErrors,
 );
 
 if ($registered) {

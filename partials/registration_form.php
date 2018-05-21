@@ -7,7 +7,7 @@
 
   <div class="form-group">
     <label for="email">Email address</label>
-    <input type="email" class="form-control" name="email" id="email" placeholder="email@example.com" value="<?= htmlentities($email); ?>">
+    <input type="email" class="form-control" name="email" id="email" placeholder="email@example.com" value="<?= htmlentities($fields['email']); ?>">
   </div>
   <button type="submit" class="btn btn-primary">Submit</button>
 </form>
