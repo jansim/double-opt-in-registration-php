@@ -18,8 +18,8 @@ function check($field) {
 <h1 class="title">Register</h1>
 
 <form action="register.php" method="post">
-  <? if ($email_error) { ?>
-    <div class="error">You entered an invalid email address.</div>
+  <? if ($error) { ?>
+    <div class="error">There was an error subscribing you to the newsletter.</div>
   <? } ?>
 
   <div class="form-group">

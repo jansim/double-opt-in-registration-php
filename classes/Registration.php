@@ -9,14 +9,19 @@ class Registration {
 
   public function __construct() {
     global $settings;
-    $this->pdo = new PDO('mysql:host='.$settings['mysql']['host'].';dbname='.$settings['mysql']['database'], $settings['mysql']['username'], $settings['mysql']['password']);
+    try {
+      $this->pdo = new PDO('mysql:host='.$settings['mysql']['host'].';dbname='.$settings['mysql']['database'], $settings['mysql']['username'], $settings['mysql']['password']);
+      $this->pdo->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
+    } catch (PDOException $e) {
+      echo 'Error creating DB Connection:' . $e->getMessage();
+    }
   }
 
   /**
    * Load data from the database into this object
    */
   private function loadFromDatabase($result) {
-    if (!$result) throw new Exception("MySQL Error: ".$this->pdo->errorInfo());
+    $this->checkForError($result);
 
     $object = $result->fetch(PDO::FETCH_OBJ);
 
@@ -52,13 +57,13 @@ class Registration {
    * create a new entry
    */
   public function initialize($fields) {
-    $statement = $this->pdo->prepare('insert into `Registration` (' . implode(',', FIELDS) . '`confirmationCode`,`confirmed`,`unsubscribed`) VALUES (?' . str_repeat(',?', 3) . ')');
+    $statement = $this->pdo->prepare('INSERT INTO `Registration` (' . implode(',', FIELDS) . ',`confirmationCode`,`confirmed`,`unsubscribed`) VALUES (?' . str_repeat(', ?', 2 + count(FIELDS)) . ')');
 
     // Concatenate both arrays
-    $values = array_merge($fields, array($this->getConfirmationCode(), 0, 0));
+    $values = array_values(array_merge($fields, array($this->getConfirmationCode(), 0, 0)));
     $result = $statement->execute($values);
 
-    if (!$result) throw new Exception("MySQL Error: ".$this->pdo->errorInfo());
+    $this->checkForError($result);
   }
 
   /**
@@ -79,7 +84,7 @@ class Registration {
     $this->pdo->prepare('update `Registration` set `confirmed`="1" where email = ?');
     $result = $statement->execute(array($this->email));
 
-    if (!$result) throw new Exception("MySQL Error: ".$this->pdo->errorInfo());
+    $this->checkForError($result);
   }
 
   /**
@@ -89,7 +94,15 @@ class Registration {
     $this->pdo->prepare('update `Registration` set `unsubscribed`="1" where email = ?');
     $result = $statement->execute(array($this->email));
 
-    if (!$result) throw new Exception("MySQL Error: ".$this->pdo->errorInfo());
+    $this->checkForError($result);
+  }
+
+  private function checkForError($result) {
+    if (!$result) {
+      echo "Database error!";
+      print_r($this->pdo->errorInfo());
+      throw new Exception("Database Error:" . $this->pdo->errorInfo()[0]);
+    }
   }
 }
 

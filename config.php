@@ -9,6 +9,7 @@
   );
 
   // Settings
+  global $settings;
   $settings = array();
 
   $settings['link_url_root'] = 'http://localhost/';
@@ -16,8 +17,8 @@
   // database connection
   $settings['mysql'] = array();
   $settings['mysql']['host'] = 'localhost';
-  $settings['mysql']['username'] = 'mysqluser';
-  $settings['mysql']['password'] = 'mysqlpassword';
-  $settings['mysql']['database'] = 'optin_example';
+  $settings['mysql']['username'] = 'root';
+  $settings['mysql']['password'] = '';
+  $settings['mysql']['database'] = 'optin';
 
 ?>

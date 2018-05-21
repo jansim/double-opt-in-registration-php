@@ -7,7 +7,7 @@
  */
 class Courier {
     const SEND_OK = 0;
-    const SENT_FAIL = 1;
+    const SEND_FAIL = 1;
 
   /**
    * Make text rfj2047 compliant
@@ -42,7 +42,7 @@ class Courier {
     // Subjects are tricky.  Even some
     // sophisticated email clients don't
     // understand unicode subject lines.
-    $subject = rfc2047_sanitize($Email->subject);
+    $subject = $this->rfc2047_sanitize($Email->subject);
 
     $message = "";
 
@@ -75,13 +75,13 @@ class Courier {
       $message .= $Email->message_text;
     }
     $message .= "\r\n";
-    $message .= "--".$mime_boundary."\r\n";
-      $message .= $Email->message_text
+    // $message .= "--".$mime_boundary."\r\n";
+    // $message .= $Email->message_text;
 
 
 
     // try to send the email.
-    $result = mail( $Email->recipient,
+    $result = mail($Email->recipient,
       $subject,
       $message,
       implode("\r\n",$headers)
@@ -95,8 +95,4 @@ class Courier {
     return self::SEND_OK;
 
   } // send
-
-
 }
-
-?>

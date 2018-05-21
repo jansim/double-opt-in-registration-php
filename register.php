@@ -30,10 +30,10 @@ if ($_POST) {
 
 	// Register if all fields are valid
 	if ($valid) {
-		$email = $fields['email'];
 		$Registration = new Registration();
+
 		try {
-			$Registration->initialize($email);
+			$Registration->initialize($fields);
 			$Email = new Email();
 			$Email->subject = "Confirm Registration";
 			$Email->recipient = $Registration->email;
@@ -45,7 +45,8 @@ if ($_POST) {
 			$Courier->send($Email);
 			$registered = true;
 		} catch (Exception $e) {
-			$email_error = true;
+			var_dump($e);
+			$error = true;
 		}
 	}
 } else if ($_GET) {
@@ -57,7 +58,7 @@ if ($_POST) {
 $data = array(
 	'fields' => $fields,
 
-	'email_error' => $email_error,
+	'error' => $error,
 	'validation_errors' => $validationErrors,
 );
 
