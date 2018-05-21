@@ -22,34 +22,17 @@ try {
 
 switch($status) {
 	case STATUS_SUCCESS:
-?>
-	
-	<h1>Success</h1>
-	<p>Your email address, <?= $Registration->email; ?> has been unsubscribed.</p>
-	
-<?
-	
-	break;
+		Renderer::page('unsubscribe_success', array(
+			'email' => $Registration->email
+		));
+		break;
 	
 	case STATUS_ERROR:
-?>
-	
-	<h1>Error</h1>
-	<p>There was a problem unsubscribing your email address.</p>
-	
-<?
-	
-	break;
+		Renderer::page('unsubscribe_error', array());
+		break;
 	
 	default:
-?>
-	
-	
-	<h1>Hello</h1>
-	<p>You have come to this page in error.</p>
-	
-	
-<?
+		Renderer::error();
 }
 
 ?>
