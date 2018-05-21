@@ -1,7 +1,6 @@
 <?php
 use Respect\Validation\Validator as v;
 
-// classes/EmailRegistration.class.php
 require_once('settings.php');
 
 class EmailRegistration {

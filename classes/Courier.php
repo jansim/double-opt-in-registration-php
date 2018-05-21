@@ -1,5 +1,4 @@
 <?php
-// classes/Courier.class.php
 
 /**
  * This class emails converts and emails data from the Email class

@@ -1,8 +1,6 @@
 {
-    {
-        "autoload": {
-            "psr-4": { "": "classes/" }
-        }
+    "autoload": {
+        "psr-4": { "": "classes/" }
     },
     "require": {
         "respect/validation": "^1.1"
