@@ -1,4 +1,4 @@
-Double Opt-In Email Registration With PHP
+Double Opt-In Email / Newsletter Registration in PHP
 =============================
 
 This is a tempalte to create a simple double-opt-in in PHP. Multiple fields as well as proper validation for this fields can be easily added.
