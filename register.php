@@ -2,9 +2,6 @@
 // register.php
 
 require_once('vendor/autoload.php');
-require_once('classes/Email.class.php');
-require_once('classes/Courier.class.php');
-require_once('classes/EmailRegistration.class.php');
 
 if ($_POST) {
 	$email = $_POST['email'];

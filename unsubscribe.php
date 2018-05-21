@@ -2,7 +2,6 @@
 // unsubscribe.php
 
 require_once('vendor/autoload.php');
-require_once('classes/EmailRegistration.class.php');
 
 // let's define some outcomes for this page
 define('STATUS_DEFAULT', 0);
