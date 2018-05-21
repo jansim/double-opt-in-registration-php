@@ -1,17 +1,12 @@
 <?
 require_once('vendor/autoload.php');
 
+require_once('config.php');
+
 use Respect\Validation\Validator as v;
 
-// add new fields here to load them
-// (they still have to be added to the HTML form)
-const FIELDS = array(
-	'email',
-	'name'
-);
-
-// Array to hold the values of the fields
-$fields = array();
+$fields = array(); // Array to hold the values of the fields
+$validationErrors = array(); // Array to hold any errors during validation
 
 // Extract fields from an array ($_POST or $_GET) if they are not found, they are set to null
 function extract_fields($target_array) {
@@ -28,14 +23,12 @@ if ($_POST) {
 
 	// ==== Validate ====
 	// A list of errors during validation, the value should correspond to the fieldname
-	$validationErrors = array();
 	if (!v::email()->validate($fields['email'])) {
 		$validationErrors[] = 'email';
 	}
 
 	// Are all fields valid?
 	$valid = count($validationErrors) == 0;
-
 
 	// Register if all fields are valid
 	if ($valid) {

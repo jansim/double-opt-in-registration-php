@@ -13,7 +13,7 @@ $email = $_GET['email'];
 
 $Registration = new Registration();
 try {
-	$Registration->fetchByEmail($email);
+	$Registration->fetchbyEmail($email);
 	$Registration->unsubscribe();
 	$status = STATUS_SUCCESS;
 } catch(Exception $e) {

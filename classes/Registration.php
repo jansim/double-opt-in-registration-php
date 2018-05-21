@@ -1,39 +1,25 @@
 <?php
-use Respect\Validation\Validator as v;
-
-require_once('settings.php');
+require_once('config.php');
 
 class Registration {
-  public $mysql;
+  public $pdo;
   public $email;
   public $confirmationCode;
   public $confirmed;
   public $unsubscribed;
 
   public function __construct() {
-    $this->mysql = new mysqli(
-        $settings['mysql']['server'] = 'localhost',
-        $settings['mysql']['username'] = 'mysqluser',
-        $settings['mysql']['password'] = 'mysqlpassword',
-        $settings['mysql']['schema'] = 'tracker_example'
-      );
-    if ($this->mysql->connect_errno) {
-      throw new Exception("MySQL Connect Error: ".$this->mysql->connect_error);
-    }
-  }
-  public function __destruct() {
-    $this->mysql->close();
+    global $settings;
+    $this->pdo = new PDO('mysql:host='.$settings['mysql']['host'].';dbname='.$settings['mysql']['database'], $settings['mysql']['username'], $settings['mysql']['password']);
   }
 
   /**
    * Load data from the database into this object
    */
-  public function loadFromDatabase($sql) {
-    // perform the SQL query
-    $result = $this->mysql->query($sql);
-    if (!$result) throw new Exception("MySQL Error: ".$this->mysql->error);
+  private function loadFromDatabase($result) {
+    if (!$result) throw new Exception("MySQL Error: ".$this->pdo->errorInfo());
 
-    $object = $result->fetch_object();
+    $object = $result->fetch(PDO::FETCH_OBJ);
 
     // load the data from the database into this object
     $this->email = $object->email;
@@ -46,20 +32,34 @@ class Registration {
   }
 
   /**
-   * validate the email and create a new entry
+   * Load the Registration by searching for the email address
    */
-  public function initialize($email) {
-    if (!v::email()->validate($email)) {
-      throw new Exception("Invalid email address");
-    }
+  public function fetchByEmail($email) {
+    $statement = $this->pdo->prepare('select * from `Registration` where email = ?');
+    $result = $statement->execute(array($email));
+    $this->loadFromDatabase($result);
+  }
 
-    $sql = 'insert into `Registration` ';
-    $sql .= '(`email`,`confirmationCode`,`confirmed`,`unsubscribed`)';
-    $sql .= ' VALUES ';
-    $sql .= '("'.$this->mysql->escape_string($email).'","'.$this->getConfirmationCode().'","0","0")';
+  /**
+   * Load the Registration by searching for a matching confirmation code
+   */
+  public function fetchByConfirmationCode($confirmationCode) {
+    $statement = $this->pdo->prepare('select * from `Registration` where confirmationCode = ?');
+    $result = $statement->execute(array($confirmationCode));
+    $this->loadFromDatabase($result);
+  }
 
-    $result = $this->mysql->query($sql);
-    if (!$result) throw new Exception("MySQL Error: ".$this->mysql->error);
+  /**
+   * create a new entry
+   */
+  public function initialize($fields) {
+    $statement = $this->pdo->prepare('insert into `Registration` (' . implode(',', FIELDS) . '`confirmationCode`,`confirmed`,`unsubscribed`) VALUES (?' . str_repeat(',?', 3) . ')');
+
+    // Concatenate both arrays
+    $values = array_merge($fields, array($this->getConfirmationCode(), 0, 0));
+    $result = $statement->execute($values);
+
+    if (!$result) throw new Exception("MySQL Error: ".$this->pdo->errorInfo());
   }
 
   /**
@@ -70,48 +70,27 @@ class Registration {
     if (!$this->confirmationCode) {
       $this->confirmationCode = md5(microtime());
     }
-    return $this->confirmCode;
-  }
-
-  /**
-   * Load the Registration by searching for a matching email address
-   */
-  public function fetchByEmail($email) {
-    $sql = 'select * from `Registration` where ';
-    $sql .= '`email`="'.$this->mysql->escape_string($email).'"';
-
-    $this->loadFromDatabase($sql);
-  }
-
-  /**
-   * Load the Registration by searching for a matching confirmation code
-   */
-  public function fetchByConfirmationCode($confirmationCode) {
-    $sql = 'select * from `Registration` where ';
-    $sql .= '`confirmationCode`="'.$this->mysql->escape_string($confirmationCode).'"';
-
+    return $this->confirmationCode;
   }
 
   /**
    * confirm the subscription
    */
   public function confirm() {
-    $sql = 'update `Registration` set `confirmed`="1" ';
-    $sql .= 'where `email`="'.$this->mysql->escape_string($this->email).'"';
+    $this->pdo->prepare('update `Registration` set `confirmed`="1" where email = ?');
+    $result = $statement->execute(array($this->email));
 
-    $result = $this->mysql->query($sql);
-    if (!$result) throw new Exception("MySQL Error: ".$this->mysql->error);
+    if (!$result) throw new Exception("MySQL Error: ".$this->pdo->errorInfo());
   }
 
   /**
    * unsubscribe the user
    */
   public function unsubscribe() {
-    $sql = 'update `Registration` set `unsubscribed`="1" ';
-    $sql .= 'where `email`="'.$this->mysql->escape_string($this->email).'"';
+    $this->pdo->prepare('update `Registration` set `unsubscribed`="1" where email = ?');
+    $result = $statement->execute(array($this->email));
 
-    $result = $this->mysql->query($sql);
-    if (!$result) throw new Exception("MySQL Error: ".$this->mysql->error);
+    if (!$result) throw new Exception("MySQL Error: ".$this->pdo->errorInfo());
   }
 }
 
