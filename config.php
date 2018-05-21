@@ -2,7 +2,7 @@
   // Configuration File
 
   // add new fields here to load them
-  // (they still have to be added to the HTML form)
+  // (they still have to be added to the HTML form and the SQL Database!)
   const FIELDS = array(
     'email',
     'name'
