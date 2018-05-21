@@ -11,10 +11,10 @@ $status = STATUS_DEFAULT;
 
 $email = $_GET['email'];
 
-$EmailRegistration = new EmailRegistration();
+$Registration = new Registration();
 try {
-	$EmailRegistration->fetchByEmail($email);
-	$EmailRegistration->unsubscribe();
+	$Registration->fetchByEmail($email);
+	$Registration->unsubscribe();
 	$status = STATUS_SUCCESS;
 } catch(Exception $e) {
 	$status = STATUS_ERROR;
@@ -25,7 +25,7 @@ switch($status) {
 ?>
 	
 	<h1>Success</h1>
-	<p>Your email address, <?= $EmailRegistration->email; ?> has been unsubscribed.</p>
+	<p>Your email address, <?= $Registration->email; ?> has been unsubscribed.</p>
 	
 <?
 	

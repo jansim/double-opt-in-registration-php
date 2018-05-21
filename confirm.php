@@ -11,14 +11,14 @@ $status = STATUS_DEFAULT;
 
 $confirmationCode = $_GET['confirmationCode'];
 
-$EmailRegistration = new EmailRegistration();
+$Registration = new Registration();
 try {
-	$EmailRegistration->fetchByConfirmationCode($confirmationCode);
-	$EmailRegistration->confirm();
+	$Registration->fetchByConfirmationCode($confirmationCode);
+	$Registration->confirm();
 	
 	$Email = new Email();
 	$Email->subject = "Confirm Registration";
-	$Email->recipient = $EmailRegistration->email;
+	$Email->recipient = $Registration->email;
 	$Email->sender = 'noreply@example.com';
 	$Email->message_html = file_get_contents('emails/confirm.htm');
 	$Courier = new Courier();
@@ -32,7 +32,7 @@ try {
 switch($status) {
 	case STATUS_SUCCESS:
 		Renderer::page('confirmation_success', array(
-			'email' => $EmailRegistration->email
+			'email' => $Registration->email
 		));
 		break;
 	

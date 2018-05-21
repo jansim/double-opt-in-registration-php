@@ -3,13 +3,13 @@ use Respect\Validation\Validator as v;
 
 require_once('settings.php');
 
-class EmailRegistration {
+class Registration {
 	public $mysql;
 	public $email;
 	public $confirmationCode;
 	public $confirmed;
 	public $unsubscribed;
-	
+
 	public function __construct() {
 		$this->mysql = new mysqli(
 		    $settings['mysql']['server'] = 'localhost',
@@ -24,7 +24,7 @@ class EmailRegistration {
 	public function __destruct() {
 		$this->mysql->close();
 	}
-	
+
 	/**
 	 * Load data from the database into this object
 	 */
@@ -32,19 +32,19 @@ class EmailRegistration {
 		// perform the SQL query
 		$result = $this->mysql->query($sql);
 		if (!$result) throw new Exception("MySQL Error: ".$this->mysql->error);
-		
+
 		$object = $result->fetch_object();
-		
+
 		// load the data from the database into this object
 		$this->email = $object->email;
 		$this->confirmationCode = $object->confirmationCode;
 		$this->confirmed = $object->confirmed;
 		$this->unsubscribed = $object->unsubscribed;
-		
+
 		// clean up
 		$result->close();
 	}
-	
+
 	/**
 	 * validate the email and create a new entry
 	 */
@@ -52,16 +52,16 @@ class EmailRegistration {
 		if (!v::email()->validate($email)) {
 			throw new Exception("Invalid email address");
 		}
-		
-		$sql = 'insert into `EmailRegistration` ';
+
+		$sql = 'insert into `Registration` ';
 		$sql .= '(`email`,`confirmationCode`,`confirmed`,`unsubscribed`)';
 		$sql .= ' VALUES ';
 		$sql .= '("'.$this->mysql->escape_string($email).'","'.$this->getConfirmationCode().'","0","0")';
-		
+
 		$result = $this->mysql->query($sql);
 		if (!$result) throw new Exception("MySQL Error: ".$this->mysql->error);
 	}
-	
+
 	/**
 	 * If no confirm code exists, generate a new one,
 	 * then return it.
@@ -72,46 +72,46 @@ class EmailRegistration {
 		}
 		return $this->confirmCode;
 	}
-	
+
 	/**
-	 * Load the EmailRegistration by searching for a matching email address
+	 * Load the Registration by searching for a matching email address
 	 */
 	public function fetchByEmail($email) {
-		$sql = 'select * from `EmailRegistration` where ';
+		$sql = 'select * from `Registration` where ';
 		$sql .= '`email`="'.$this->mysql->escape_string($email).'"';
-		
+
 		$this->loadFromDatabase($sql);
 	}
-	
+
 	/**
-	 * Load the EmailRegistration by searching for a matching confirmation code
+	 * Load the Registration by searching for a matching confirmation code
 	 */
 	public function fetchByConfirmationCode($confirmationCode) {
-		$sql = 'select * from `EmailRegistration` where ';
+		$sql = 'select * from `Registration` where ';
 		$sql .= '`confirmationCode`="'.$this->mysql->escape_string($confirmationCode).'"';
-		
+
 	}
-	
+
 	/**
 	 * confirm the subscription
 	 */
 	public function confirm() {
-		$sql = 'update `EmailRegistration` set `confirmed`="1" ';
+		$sql = 'update `Registration` set `confirmed`="1" ';
 		$sql .= 'where `email`="'.$this->mysql->escape_string($this->email).'"';
-		
+
 		$result = $this->mysql->query($sql);
 		if (!$result) throw new Exception("MySQL Error: ".$this->mysql->error);
 	}
-	
+
 	/**
 	 * unsubscribe the user
 	 */
 	public function unsubscribe() {
-		$sql = 'update `EmailRegistration` set `unsubscribed`="1" ';
+		$sql = 'update `Registration` set `unsubscribed`="1" ';
 		$sql .= 'where `email`="'.$this->mysql->escape_string($this->email).'"';
-		
+
 		$result = $this->mysql->query($sql);
-		if (!$result) throw new Exception("MySQL Error: ".$this->mysql->error);		
+		if (!$result) throw new Exception("MySQL Error: ".$this->mysql->error);
 	}
 }
 

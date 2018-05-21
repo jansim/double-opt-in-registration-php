@@ -40,12 +40,12 @@ if ($_POST) {
 	// Register if all fields are valid
 	if ($valid) {
 		$email = $fields['email'];
-		$EmailRegistration = new EmailRegistration();
+		$Registration = new Registration();
 		try {
-			$EmailRegistration->initialize($email);
+			$Registration->initialize($email);
 			$Email = new Email();
 			$Email->subject = "Confirm Registration";
-			$Email->recipient = $EmailRegistration->email;
+			$Email->recipient = $Registration->email;
 			$Email->sender = 'noreply@example.com';
 			$Email->message_html = file_get_contents('emails/register.htm');
 			$Courier = new Courier();

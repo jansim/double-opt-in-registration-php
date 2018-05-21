@@ -1,6 +1,6 @@
--- EmailRegistration table
+-- Registration table
 
-CREATE TABLE EmailRegistration (
+CREATE TABLE Registration (
     id INT NOT NULL PRIMARY KEY AUTO_INCREMENT,
     email varchar(255),
     confirmationCode varchar(32),
