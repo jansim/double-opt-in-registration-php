@@ -3,6 +3,8 @@ require_once('vendor/autoload.php');
 
 use Respect\Validation\Validator as v;
 
+$registered = false; // Did the user successfully register?
+$error = false; // Was there an error along the way?
 $fields = array(); // Array to hold the values of the fields
 $validationErrors = array(); // Array to hold any errors during validation
 
@@ -49,7 +51,7 @@ if ($_POST) {
 			$error = true;
 		}
 	}
-} else if ($_GET) {
+} else {
 	// Get placeholder values from GET if they are set (default to null)
 	extract_fields($_GET);
 }

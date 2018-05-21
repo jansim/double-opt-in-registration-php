@@ -1,6 +1,4 @@
 <?
-// confirm.php
-
 require_once('vendor/autoload.php');
 
 // let's define some outcomes for this page

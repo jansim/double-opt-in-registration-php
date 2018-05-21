@@ -20,19 +20,14 @@ class Registration {
   /**
    * Load data from the database into this object
    */
-  private function loadFromDatabase($result) {
-    $this->checkForError($result);
-
-    $object = $result->fetch(PDO::FETCH_OBJ);
+  private function loadFromDatabase($statement) {
+    $object = $statement->fetch(PDO::FETCH_OBJ);
 
     // load the data from the database into this object
     $this->email = $object->email;
     $this->confirmationCode = $object->confirmationCode;
     $this->confirmed = $object->confirmed;
     $this->unsubscribed = $object->unsubscribed;
-
-    // clean up
-    $result->close();
   }
 
   /**
@@ -41,7 +36,8 @@ class Registration {
   public function fetchByEmail($email) {
     $statement = $this->pdo->prepare('select * from `Registration` where email = ?');
     $result = $statement->execute(array($email));
-    $this->loadFromDatabase($result);
+    $this->checkForError($result);
+    $this->loadFromDatabase($statement);
   }
 
   /**
@@ -50,7 +46,8 @@ class Registration {
   public function fetchByConfirmationCode($confirmationCode) {
     $statement = $this->pdo->prepare('select * from `Registration` where confirmationCode = ?');
     $result = $statement->execute(array($confirmationCode));
-    $this->loadFromDatabase($result);
+    $this->checkForError($result);
+    $this->loadFromDatabase($statement);
   }
 
   /**
@@ -81,7 +78,7 @@ class Registration {
    * confirm the subscription
    */
   public function confirm() {
-    $this->pdo->prepare('update `Registration` set `confirmed`="1" where email = ?');
+    $statement = $this->pdo->prepare('update `Registration` set `confirmed`="1" where email = ?');
     $result = $statement->execute(array($this->email));
 
     $this->checkForError($result);
@@ -91,7 +88,7 @@ class Registration {
    * unsubscribe the user
    */
   public function unsubscribe() {
-    $this->pdo->prepare('update `Registration` set `unsubscribed`="1" where email = ?');
+    $statement = $this->pdo->prepare('update `Registration` set `unsubscribed`="1" where email = ?');
     $result = $statement->execute(array($this->email));
 
     $this->checkForError($result);
