@@ -1,6 +1,7 @@
 {
     "autoload": {
-        "psr-4": { "": "classes/" }
+        "psr-4": { "": "classes/" },
+        "files": ["config.php"]
     },
     "require": {
         "respect/validation": "^1.1"

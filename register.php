@@ -1,8 +1,6 @@
 <?
 require_once('vendor/autoload.php');
 
-require_once('config.php');
-
 use Respect\Validation\Validator as v;
 
 $fields = array(); // Array to hold the values of the fields

@@ -1,5 +1,4 @@
 <?php
-require_once('config.php');
 
 class Registration {
   public $pdo;
