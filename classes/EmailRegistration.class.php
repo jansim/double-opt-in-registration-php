@@ -1,10 +1,10 @@
 <?php
+use Respect\Validation\Validator as v;
+
 // classes/EmailRegistration.class.php
 require_once('settings.php');
 
 class EmailRegistration {
-	const EMAIL_REGEX = "/^[_a-z0-9-]+(\.[_a-z0-9-]+)*@[a-z0-9-]+(\.[a-z0-9-]+)*(\.[a-z]{2,3})$/i";
-	
 	public $mysql;
 	public $email;
 	public $confirmationCode;
@@ -50,7 +50,7 @@ class EmailRegistration {
 	 * validate the email and create a new entry
 	 */
 	public function initialize($email) {
-		if (!preg_match(EMAIL_REGEX, $email)) {
+		if (!v::email()->validate($email)) {
 			throw new Exception("Invalid email address");
 		}
 		
