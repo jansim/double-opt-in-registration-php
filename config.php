@@ -12,6 +12,9 @@
   global $settings;
   $settings = array();
 
+  // From which mail should the e-mail notifications be sent?
+  $settings['email_sender'] = 'noreply@example.com';
+
   $settings['link_url_root'] = 'http://localhost/';
 
   // database connection
