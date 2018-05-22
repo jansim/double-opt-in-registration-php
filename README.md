@@ -6,6 +6,8 @@ This is a tempalte to create a simple double-opt-in in PHP. Multiple fields as w
 ## Configuration
 This project uses [composer](https://getcomposer.org/) and to initiliaze it properly you have to run `composer install` once.
 
+It also uses npm to fetch js dependencies, so you have to run `npm install` once as well.
+
 Set up your settings file to reflect your MySQL server settings in config.php.
 ```
     $settings['mysql']['server'] = 'localhost';

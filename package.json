@@ -1,0 +1,19 @@
+{
+  "name": "php-double-opt-in",
+  "version": "1.0.0",
+  "description": "Perform an Email-based double-opt-in registration using PHP and MySQL. ",
+  "dependencies": {
+    "bootstrap": "^4.1.1"
+  },
+  "devDependencies": {},
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/jansim/php-double-opt-in.git"
+  },
+  "author": "Jansim",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/jansim/php-double-opt-in/issues"
+  },
+  "homepage": "https://github.com/jansim/php-double-opt-in#readme"
+}
