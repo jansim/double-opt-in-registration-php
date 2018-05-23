@@ -8,13 +8,7 @@ class Registration {
   public $unsubscribed;
 
   public function __construct() {
-    global $settings;
-    try {
-      $this->pdo = new PDO('mysql:host='.$settings['mysql']['host'].';dbname='.$settings['mysql']['database'], $settings['mysql']['username'], $settings['mysql']['password']);
-      $this->pdo->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
-    } catch (PDOException $e) {
-      echo 'Error creating DB Connection:' . $e->getMessage();
-    }
+    $this->pdo = Database::getPDO();
   }
 
   /**
