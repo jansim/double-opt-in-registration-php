@@ -50,6 +50,10 @@ class Registration {
   public function initialize($fields) {
     $this->email = $fields['email'];
 
+    // Remove any existing entries for this e-mail
+    $this->pdo->prepare('DELETE FROM `Registration` WHERE `email` = ?')->execute(array($this->email));
+
+
     // Prepare the statement
     $statement = $this->pdo->prepare('INSERT INTO `Registration` (' . implode(',', FIELDS) . ',`confirmationCode`,`confirmed`,`unsubscribed`) VALUES (?' . str_repeat(', ?', 2 + count(FIELDS)) . ')');
 
