@@ -43,8 +43,8 @@ if ($_POST) {
 			$mailData = array(
 				'link' => $settings['link_url_root'] . 'confirm.php?confirmationCode=' . urlencode($Registration->getConfirmationCode())
 			);
-			$Email->message_text = Renderer::renderMail('mail_confirmed_txt', $mailData);
-			$Email->message_html = Renderer::renderMail('mail_confirmed', $mailData);
+			$Email->message_text = Renderer::renderMail('mail_registered_txt', $mailData);
+			$Email->message_html = Renderer::renderMail('mail_registered', $mailData);
 
 			$error = !$Email->send();
 			$registered = true;
