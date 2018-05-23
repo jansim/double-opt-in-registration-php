@@ -1,6 +1,7 @@
 <?php
 
 class Database {
+  const DATABASE_SETUP_FILE = 'supporting-files/database-setup.sql';
   private static $pdo;
 
   public static function getPDO()  {
@@ -16,6 +17,15 @@ class Database {
     }
 
     return self::$pdo;
+  }
+
+  public static function setup() {
+    $pdo = self::getPDO();
+    $success = $pdo->exec(file_get_contents(self::DATABASE_SETUP_FILE));
+    if ($success === false) {
+      echo 'Error setting up Database.';
+      print_r($pdo->errorInfo(), true);
+    }
   }
 
 }
