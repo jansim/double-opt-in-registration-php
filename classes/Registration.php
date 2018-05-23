@@ -48,6 +48,8 @@ class Registration {
    * create a new entry
    */
   public function initialize($fields) {
+    $this->email = $fields['email'];
+
     $statement = $this->pdo->prepare('INSERT INTO `Registration` (' . implode(',', FIELDS) . ',`confirmationCode`,`confirmed`,`unsubscribed`) VALUES (?' . str_repeat(', ?', 2 + count(FIELDS)) . ')');
 
     // Concatenate both arrays

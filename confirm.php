@@ -17,12 +17,14 @@ try {
 	$Email = new Email();
 	$Email->subject = "Confirm Registration";
 	$Email->recipient = $Registration->email;
-	$Email->sender = $settings['email_sender'];
-	$Email->message_html = Renderer::renderMail('mail_confirmed', array(
+
+	$mailData = array(
 		'link' => $settings['link_url_root'] . 'unsubscribe.php?email=' . urlencode($Registration->email)
-	));
-	$Courier = new Courier();
-	$Courier->send($Email);
+	);
+	$Email->message_text = Renderer::renderMail('mail_confirmed_txt', $mailData);
+	$Email->message_html = Renderer::renderMail('mail_confirmed', $mailData);
+
+	$Email->send();
 	
 	$status = STATUS_SUCCESS;
 } catch(Exception $e) {

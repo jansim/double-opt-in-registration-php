@@ -34,9 +34,9 @@ class Renderer {
   public static function renderMail($partial, $data = null) {
     ob_start(); // start buffering all outputs
 
-    $html = self::renderPartial($partial, $data);
+    self::renderPartial($partial, $data);
 
-    ob_get_contents(); // get buffer contents
+    $html = ob_get_contents(); // get buffer contents
     ob_end_clean(); // disable buffer & clean it up
 
     return $html;
