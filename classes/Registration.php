@@ -28,7 +28,7 @@ class Registration {
    * Load the Registration by searching for the email address
    */
   public function fetchByEmail($email) {
-    $statement = $this->pdo->prepare('select * from `Registration` where email = ?');
+    $statement = $this->pdo->prepare('SELECT * FROM `Registration` WHERE email = ?');
     $result = $statement->execute(array($email));
     $this->checkForError($result);
     $this->loadFromDatabase($statement);
@@ -38,7 +38,7 @@ class Registration {
    * Load the Registration by searching for a matching confirmation code
    */
   public function fetchByConfirmationCode($confirmationCode) {
-    $statement = $this->pdo->prepare('select * from `Registration` where confirmationCode = ?');
+    $statement = $this->pdo->prepare('SELECT * FROM `Registration` WHERE confirmationCode = ?');
     $result = $statement->execute(array($confirmationCode));
     $this->checkForError($result);
     $this->loadFromDatabase($statement);
@@ -50,10 +50,13 @@ class Registration {
   public function initialize($fields) {
     $this->email = $fields['email'];
 
+    // Prepare the statement
     $statement = $this->pdo->prepare('INSERT INTO `Registration` (' . implode(',', FIELDS) . ',`confirmationCode`,`confirmed`,`unsubscribed`) VALUES (?' . str_repeat(', ?', 2 + count(FIELDS)) . ')');
 
     // Concatenate both arrays
     $values = array_values(array_merge($fields, array($this->getConfirmationCode(), 0, 0)));
+
+    // Execute the statement
     $result = $statement->execute($values);
 
     $this->checkForError($result);
@@ -74,8 +77,8 @@ class Registration {
    * confirm the subscription
    */
   public function confirm() {
-    $statement = $this->pdo->prepare('update `Registration` set `confirmed`="1" where email = ?');
-    $result = $statement->execute(array($this->email));
+    $statement = $this->pdo->prepare('UPDATE `Registration` SET `confirmed`="1" WHERE confirmationCode = ?');
+    $result = $statement->execute(array($this->confirmationCode));
 
     $this->checkForError($result);
   }
@@ -84,7 +87,7 @@ class Registration {
    * unsubscribe the user
    */
   public function unsubscribe() {
-    $statement = $this->pdo->prepare('update `Registration` set `unsubscribed`="1" where email = ?');
+    $statement = $this->pdo->prepare('UPDATE `Registration` SET `unsubscribed`="1" WHERE email = ?');
     $result = $statement->execute(array($this->email));
 
     $this->checkForError($result);
