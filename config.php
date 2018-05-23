@@ -13,7 +13,9 @@
   $settings = array();
 
   // From which mail should the e-mail notifications be sent?
-  $settings['email_sender'] = 'noreply@example.com';
+  $settings['email']['sender'] = 'noreply@example.com';
+  $settings['email']['registered_subject'] = 'Confirm Registration';
+  $settings['email']['confirmed_subject'] = 'Successfully Registered';
 
   $settings['link_url_root'] = 'http://localhost/';
 

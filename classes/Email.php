@@ -19,7 +19,7 @@ class Email {
 
   public function __construct() {
     global $settings;
-    $this->sender = $settings['email_sender']; // set default email-sender
+    $this->sender = $settings['email']['sender']; // set default email-sender
   }
 
   // Send the e-mail

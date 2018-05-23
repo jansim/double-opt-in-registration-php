@@ -15,7 +15,7 @@ try {
 	$Registration->confirm();
 	
 	$Email = new Email();
-	$Email->subject = "Confirm Registration";
+	$Email->subject = $settings['email']['confirmed_subject'];
 	$Email->recipient = $Registration->email;
 
 	$mailData = array(

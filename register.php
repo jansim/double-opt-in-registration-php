@@ -37,7 +37,7 @@ if ($_POST) {
 		try {
 			$Registration->initialize($fields);
 			$Email = new Email();
-			$Email->subject = "Confirm Registration";
+			$Email->subject = $settings['email']['registered_subject'];
 			$Email->recipient = $Registration->email;
 
 			$mailData = array(
