@@ -9,7 +9,7 @@ class Database {
 
     if (!self::$pdo) {
       try {
-        self::$pdo = new PDO('mysql:host='.$settings['mysql']['host'].';dbname='.$settings['mysql']['database'], $settings['mysql']['username'], $settings['mysql']['password']);
+        self::$pdo = new PDO('mysql:host='.$settings['mysql']['host'].';dbname='.$settings['mysql']['database'].';charset=UTF8', $settings['mysql']['username'], $settings['mysql']['password']);
         self::$pdo->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
       } catch (PDOException $e) {
         echo 'Error creating DB Connection:' . $e->getMessage();
