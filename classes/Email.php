@@ -27,6 +27,8 @@ class Email {
   public function send () {
     $mail = new PHPMailer(true); // Passing `true` enables exceptions
     try {
+        $mail->CharSet = 'UTF-8';
+
         $mail->setFrom($this->sender);
         $mail->addReplyTo($this->sender);
 
