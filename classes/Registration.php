@@ -32,6 +32,10 @@ class Registration {
    * Load the Registration by searching for the email address
    */
   public function fetchByEmail($email) {
+    if (!$email) {
+      throw new Exception("No email provided!");
+    }
+
     $statement = $this->pdo->prepare('SELECT * FROM '.$this->table.' WHERE email = ?');
     $result = $statement->execute(array($email));
     $this->checkForError($result);
@@ -42,6 +46,10 @@ class Registration {
    * Load the Registration by searching for a matching confirmation code
    */
   public function fetchByConfirmationCode($confirmationCode) {
+    if (!$confirmationCode) {
+      throw new Exception("No ConfirmationCode provided!");
+    }
+
     $statement = $this->pdo->prepare('SELECT * FROM '.$this->table.' WHERE confirmationCode = ?');
     $result = $statement->execute(array($confirmationCode));
     $this->checkForError($result);
