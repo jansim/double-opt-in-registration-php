@@ -20,8 +20,12 @@ class Database {
   }
 
   public static function setup() {
+    global $settings;
+
     $pdo = self::getPDO();
-    $success = $pdo->exec(file_get_contents(self::DATABASE_SETUP_FILE));
+    $sql = file_get_contents(self::DATABASE_SETUP_FILE);
+    $sql = str_replace('?', $settings['mysql']['registration_table'], $sql); // replace question mark with table name
+    $success = $pdo->exec($sql);
     if ($success === false) {
       echo 'Error setting up Database.';
       print_r($pdo->errorInfo(), true);

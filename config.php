@@ -26,4 +26,6 @@
   $settings['mysql']['password'] = '';
   $settings['mysql']['database'] = 'optin';
 
+  $settings['mysql']['registration_table'] = 'DoubleOptIn';
+
 ?>

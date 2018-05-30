@@ -6,9 +6,13 @@ class Registration {
   public $confirmationCode;
   public $confirmed;
   public $unsubscribed;
+  public $table;
 
   public function __construct() {
+    global $settings;
     $this->pdo = Database::getPDO();
+
+    $this->table = $settings['mysql']['registration_table'];
   }
 
   /**
@@ -28,7 +32,7 @@ class Registration {
    * Load the Registration by searching for the email address
    */
   public function fetchByEmail($email) {
-    $statement = $this->pdo->prepare('SELECT * FROM `Registration` WHERE email = ?');
+    $statement = $this->pdo->prepare('SELECT * FROM '.$this->table.' WHERE email = ?');
     $result = $statement->execute(array($email));
     $this->checkForError($result);
     $this->loadFromDatabase($statement);
@@ -38,7 +42,7 @@ class Registration {
    * Load the Registration by searching for a matching confirmation code
    */
   public function fetchByConfirmationCode($confirmationCode) {
-    $statement = $this->pdo->prepare('SELECT * FROM `Registration` WHERE confirmationCode = ?');
+    $statement = $this->pdo->prepare('SELECT * FROM '.$this->table.' WHERE confirmationCode = ?');
     $result = $statement->execute(array($confirmationCode));
     $this->checkForError($result);
     $this->loadFromDatabase($statement);
@@ -51,11 +55,11 @@ class Registration {
     $this->email = $fields['email'];
 
     // Remove any existing entries for this e-mail
-    $this->pdo->prepare('DELETE FROM `Registration` WHERE `email` = ?')->execute(array($this->email));
+    $this->pdo->prepare('DELETE FROM '.$this->table.' WHERE `email` = ?')->execute(array($this->email));
 
 
     // Prepare the statement
-    $statement = $this->pdo->prepare('INSERT INTO `Registration` (' . implode(',', FIELDS) . ',`confirmationCode`,`confirmed`,`unsubscribed`) VALUES (?' . str_repeat(', ?', 2 + count(FIELDS)) . ')');
+    $statement = $this->pdo->prepare('INSERT INTO '.$this->table.' ('.implode(',', FIELDS).',`confirmationCode`,`confirmed`,`unsubscribed`) VALUES (?'.str_repeat(', ?', 2 + count(FIELDS)).')');
 
     // Concatenate both arrays
     $values = array_values(array_merge($fields, array($this->getConfirmationCode(), 0, 0)));
@@ -81,7 +85,7 @@ class Registration {
    * confirm the subscription
    */
   public function confirm() {
-    $statement = $this->pdo->prepare('UPDATE `Registration` SET `confirmed`="1" WHERE confirmationCode = ?');
+    $statement = $this->pdo->prepare('UPDATE '.$this->table.' SET `confirmed`="1" WHERE confirmationCode = ?');
     $result = $statement->execute(array($this->confirmationCode));
 
     $this->checkForError($result);
@@ -91,7 +95,7 @@ class Registration {
    * unsubscribe the user
    */
   public function unsubscribe() {
-    $statement = $this->pdo->prepare('UPDATE `Registration` SET `unsubscribed`="1" WHERE email = ?');
+    $statement = $this->pdo->prepare('UPDATE '.$this->table.' SET `unsubscribed`="1" WHERE email = ?');
     $result = $statement->execute(array($this->email));
 
     $this->checkForError($result);

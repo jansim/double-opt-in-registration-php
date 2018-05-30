@@ -1,6 +1,6 @@
 -- Registration table
 
-CREATE TABLE Registration (
+CREATE TABLE ? (
     id INT NOT NULL PRIMARY KEY AUTO_INCREMENT,
     email varchar(255),
     name varchar(255),
