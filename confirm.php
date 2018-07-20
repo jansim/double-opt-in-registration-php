@@ -21,6 +21,7 @@ try {
 	$mailData = array(
 		'link' => $settings['link_url_root'] . 'unsubscribe.php?email=' . urlencode($Registration->email)
 	);
+	$mailData = array_merge($mailData, $Registration->fields);
 	$Email->message_text = Renderer::renderMail('mail_confirmed_txt', $mailData);
 	$Email->message_html = Renderer::renderMail('mail_confirmed', $mailData);
 

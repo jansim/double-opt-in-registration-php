@@ -7,6 +7,7 @@ class Registration {
   public $confirmed;
   public $unsubscribed;
   public $table;
+  public $fields = array();
 
   public function __construct() {
     global $settings;
@@ -26,6 +27,11 @@ class Registration {
     $this->confirmationCode = $object->confirmationCode;
     $this->confirmed = $object->confirmed;
     $this->unsubscribed = $object->unsubscribed;
+
+    // populate fields array
+    foreach (FIELDS as $name) {
+      $this->fields[$name] = $object->$name;
+    }
   }
 
   /**
@@ -60,6 +66,7 @@ class Registration {
    * create a new entry
    */
   public function initialize($fields) {
+    $this->fields = $fields;
     $this->email = $fields['email'];
 
     // Remove any existing entries for this e-mail
